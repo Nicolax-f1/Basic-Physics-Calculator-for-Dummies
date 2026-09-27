@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Physics Formula Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      color: dodgerblue;
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .container {
+      display: inline-block;
+      text-align: left;
+      background-color: #0a0a0a;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgb(4, 82, 160); 
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 20px;
+      color: lightblue;
+    }
+    input, select {
+      display: block;
+      margin: 10px auto;
+      width: 250px;
+      padding: 8px;
+      font-size: 18px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: dodgerblue;
+      color: black;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: lightblue;
+    }
+    #result {
+      margin-top: 25px;
+      font-size: 22px;
+      font-weight: bold;
+      color: dodgerblue;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Physics Formula Calculator</h1>
+  <div class="container">
+    <label for="formula">Choose formula:</label>
+    <select id="formula" onchange="showInputs()">
+      <option value="force">Force (F = m × a)</option>
+      <option value="momentum">Momentum (p = m × v)</option>
+      <option value="energy">Kinetic Energy (E = 1/2 m v²)</option>
+      <option value="potential">Potential Energy (PE = m × g × h)</option>
+      <option value="ohm">Ohm's Law (V = I × R)</option>
+      <option value="einstein">Einstein's Mass-Energy (E = m × c²)</option>
+    </select>
+
+    <div id="inputs">
+      <label id="massLabel">Mass (kg):</label>
+      <input type="number" id="mass">
+
+      <label id="accLabel">Acceleration (m/s²):</label>
+      <input type="number" id="acceleration">
+
+      <label id="velLabel">Velocity (m/s):</label>
+      <input type="number" id="velocity">
+
+      <label id="heightLabel">Height (m):</label>
+      <input type="number" id="height">
+
+      <label id="currentLabel">Current (A):</label>
+      <input type="number" id="current">
+
+      <label id="resLabel">Resistance (Ω):</label>
+      <input type="number" id="resistance">
+    </div>
+
+    <button onclick="calculate()">Calculate</button>
+    <button onclick="resetCalc()">Reset</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    function showInputs() {
+      let choice = document.getElementById('formula').value;
+      let ids = ['mass', 'acceleration', 'velocity', 'height', 'current', 'resistance'];
+      let labels = ['massLabel', 'accLabel', 'velLabel', 'heightLabel', 'currentLabel', 'resLabel'];
+
+      // hide all first
+      ids.forEach(id => document.getElementById(id).style.display = "none");
+      labels.forEach(id => document.getElementById(id).style.display = "none");
+
+      // show only needed ones
+      if (choice === "force") {
+        show(['mass', 'acceleration']);
+      } else if (choice === "momentum" || choice === "energy") {
+        show(['mass', 'velocity']);
+      } else if (choice === "potential") {
+        show(['mass', 'height']);
+      } else if (choice === "ohm") {
+        show(['current', 'resistance']);
+      } else if (choice === "einstein") {
+        show(['mass']);
+      }
+    }
+
+    function show(fields) {
+      fields.forEach(f => {
+        document.getElementById(f).style.display = "block";
+        document.getElementById(f + 'Label').style.display = "block";
+      });
+    }
+
+    function calculate() {
+      let m = parseFloat(document.getElementById('mass').value);
+      let a = parseFloat(document.getElementById('acceleration').value);
+      let v = parseFloat(document.getElementById('velocity').value);
+      let h = parseFloat(document.getElementById('height').value);
+      let I = parseFloat(document.getElementById('current').value);
+      let R = parseFloat(document.getElementById('resistance').value);
+      let choice = document.getElementById('formula').value;
+      let result = "";
+
+      if (choice === "force" && m && a) result = "Force = " + (m * a) + " N";
+      else if (choice === "momentum" && m && v) result = "Momentum = " + (m * v) + " kg·m/s";
+      else if (choice === "energy" && m && v) result = "Kinetic Energy = " + (0.5 * m * v * v) + " J";
+      else if (choice === "potential" && m && h) result = "Potential Energy = " + (m * 9.8 * h) + " J";
+      else if (choice === "ohm" && I && R) result = "Voltage = " + (I * R) + " V";
+      else if (choice === "einstein" && m) result = "Energy = " + (m * 3e8 * 3e8) + " J";
+      else result = "Please enter the required values.";
+
+      document.getElementById('result').innerText = result;
+    }
+
+    function resetCalc() {
+      document.querySelectorAll("input").forEach(input => input.value = "");
+      document.getElementById('result').innerText = "";
+    }
+
+    window.onload = showInputs;
+  </script>
+</body>
+</html>
